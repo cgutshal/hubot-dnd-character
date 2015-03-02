@@ -5,13 +5,17 @@
 
 helpText = """```
 Create a randomized character idea:     who is my character
+Create a randomized quest:              what is our quest
 Add or remove character adjective:      (add|remove) adjective "<adjective>"
 Add or remove character race:           (add|remove) race "<race>"
 Add or remove character class:          (add|remove) class "<class>"
 Add or remove character location:       (add|remove) location "<location>"
 Add or remove character backstory:      (add|remove) backstory "<backstory>"
+Add or remove quest deed:               (add|remove) deed "<deed>"
+Add or remove quest failure:            (add|remove) failure "<failure>"
 List item types:                        list <type>
 ```"""
+
 
 keyToDb =
     'adjective': 'dndAdjectives'
