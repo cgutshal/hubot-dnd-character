@@ -19,6 +19,8 @@ keyToDb =
     'class': 'dndClasses'
     'location': 'dndLocations'
     'backstory': 'dndBackstories'
+    'deed':'dndDeedToDo'
+    'failure':'ifTheDeedisFailed'
 
 pluralize =
     'adjective': 'Adjectives'
@@ -26,6 +28,8 @@ pluralize =
     'class': 'Classes'
     'location': 'Locations'
     'backstory': 'Backstories'
+    'deed': 'Deeds'
+    'failure': 'Failures'
 
 defaults =
     'adjective': "tough"
@@ -33,6 +37,8 @@ defaults =
     'class': "ranger"
     'location': "the woodland kingdoms"
     'backstory': "doesn't take shit from anyone"
+    'deed': "save a kitten"
+    'failure': "a price cries himself to sleep"
 
 randItem = (list) ->
     list[Math.floor(Math.random() * list.length)]
@@ -72,6 +78,17 @@ module.exports = (robot) ->
 
         "#{adj} #{race} #{dclass} from #{location} who #{backstory}."
 
+
+    rollQuest = ->
+        adj = randItem getDb 'adjective'
+        race = randItem getDb 'race'
+        dclass = randItem getDb 'class'
+        location = randItem getDb 'location'
+        deed = randItem getDb 'deed'
+        failure = randItem getDb 'failure'
+
+        "A #{adj} #{race} ask the party to #{deed} from #{location} before #{failure}!"
+
     robot.respond /(roll me a|create me a|who is my) character/i, (msg) ->
         msg.send rollCharacter()
 
@@ -83,6 +100,9 @@ module.exports = (robot) ->
             msg.send "  #{user.name}, the #{char}"
         msg.send "  ... have banded together to brave the odds in search of The Quest for the Meanigful MacGuffin!"
 
+    robot.respond /(what is our) quest/i, (msg) ->
+        msg.send rollQuest()
+        
     robot.respond /add (\w+) "([^\"]+)"/i, respondToKey ({msg, content, key, db}) ->
         if content not in db
             db.push content
