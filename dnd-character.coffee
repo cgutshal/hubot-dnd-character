@@ -6,13 +6,18 @@
 helpText = """```
 Create a randomized character idea:     who is my character
 Create a randomized quest:              what is our quest
+Create a randomized weapon:             what am I wielding
 Add or remove character adjective:      (add|remove) adjective "<adjective>"
 Add or remove character race:           (add|remove) race "<race>"
 Add or remove character class:          (add|remove) class "<class>"
 Add or remove character location:       (add|remove) location "<location>"
 Add or remove character backstory:      (add|remove) backstory "<backstory>"
 Add or remove quest deed:               (add|remove) deed "<deed>"
-Add or remove quest failure:            (add|remove) failure "<failure>"
+Add or remove weapon property:          (add|remove) property "<property>"
+Add of remove weapon mineral            (add|remove) mineral "<mineral>"
+Add or remove weapon:                   (add|remove) weapon "<weapon>"
+Add or remove failure:                  (add|remove) failure "<failure>"
+Add or remove reward:                   (add|remove) reward "<reward>"
 List item types:                        list <type>
 ```"""
 
@@ -25,6 +30,10 @@ keyToDb =
     'backstory': 'dndBackstories'
     'deed':'dndDeedToDo'
     'failure':'ifTheDeedisFailed'
+    'weapon': 'dndWeapon'
+    'property':'magicProperty'
+    'mineral': 'dndMineral'
+    'reward': 'dndReward'
 
 pluralize =
     'adjective': 'Adjectives'
@@ -34,6 +43,11 @@ pluralize =
     'backstory': 'Backstories'
     'deed': 'Deeds'
     'failure': 'Failures'
+    'weapon': 'Weapons'
+    'property':'Properties'
+    'mineral': 'Minerales'
+    'reward': 'Rewards'
+
 
 defaults =
     'adjective': "tough"
@@ -42,8 +56,13 @@ defaults =
     'location': "the woodland kingdoms"
     'backstory': "doesn't take shit from anyone"
     'deed': "save a kitten"
-    'failure': "a price cries himself to sleep"
+    'failure': "a prince cries himself to sleep"
+    'weapon': "Sword"
+    'property': "Fire"
+    'mineral': "Steel"
+    'reward': 'a donut'
 
+    
 randItem = (list) ->
     list[Math.floor(Math.random() * list.length)]
 
@@ -79,7 +98,6 @@ module.exports = (robot) ->
         dclass = randItem getDb 'class'
         location = randItem getDb 'location'
         backstory = randItem getDb 'backstory'
-
         "#{adj} #{race} #{dclass} from #{location} who #{backstory}."
 
 
@@ -90,8 +108,16 @@ module.exports = (robot) ->
         location = randItem getDb 'location'
         deed = randItem getDb 'deed'
         failure = randItem getDb 'failure'
+        reward = randItem getDb 'reward'
+        "A #{adj} #{race} from #{location} asks the party to #{deed} before #{failure}! In exhange you will recieve #{reward}"
 
-        "A #{adj} #{race} ask the party to #{deed} from #{location} before #{failure}!"
+    rollWeapon = ->
+        adj = randItem getDb 'adjective'
+        weapon = randItem getDb 'weapon'
+        property = randItem getDb 'property'
+        mineral = randItem getDb 'mineral'
+        race = randItem getDb 'race'
+        "You are wielding a #{adj} #{weapon} of #{property} that was forged with #{mineral}. The kingdom of #{race}s fear this weapon."    
 
     robot.respond /(roll me a|create me a|who is my) character/i, (msg) ->
         msg.send rollCharacter()
@@ -106,6 +132,9 @@ module.exports = (robot) ->
 
     robot.respond /(what is our) quest/i, (msg) ->
         msg.send rollQuest()
+
+    robot.respond /(what am I wielding)/i, (msg) ->
+        msg.send rollWeapon()
         
     robot.respond /add (\w+) "([^\"]+)"/i, respondToKey ({msg, content, key, db}) ->
         if content not in db
